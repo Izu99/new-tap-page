@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>New Tab</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            body {
+                background-size: cover;
+                background-position: center;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                position: relative;
+                overflow: hidden;
+                transition: background-image 1s ease;
+            }
+
+            body::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(3px);
+                z-index: -1;
+            }
+
+            .container {
+                width: 80%;
+                max-width: 900px;
+                text-align: center;
+                z-index: 1;
+            }
+
+            .greeting {
+                font-size: 3rem;
+                margin-bottom: 0.5rem;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+                font-weight: 300;
+                letter-spacing: 1px;
+            }
+
+            .date-time {
+                font-size: 1.5rem;
+                margin-bottom: 2.5rem;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+                font-weight: 300;
+                opacity: 0.9;
+            }
+
+            .search-container {
+                display: flex;
+                margin-bottom: 3rem;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                border-radius: 30px;
+                overflow: hidden;
+                transition: transform 0.3s, box-shadow 0.3s;
+            }
+
+            .search-container:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            }
+
+            .search-input {
+                flex: 1;
+                padding: 16px 24px;
+                font-size: 16px;
+                border: none;
+                outline: none;
+                background-color: rgba(255, 255, 255, 0.9);
+            }
+
+            .search-button {
+                background: linear-gradient(45deg, #0078d7, #00a2ff);
+                color: white;
+                border: none;
+                padding: 16px 32px;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: 500;
+                transition: background 0.3s;
+            }
+
+            .search-button:hover {
+                background: linear-gradient(45deg, #006bb8, #0095e8);
+            }
+
+            .social-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+                gap: 20px;
+                margin-bottom: 3rem;
+                padding: 0 20px;
+            }
+
+            .social-icon {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                color: white;
+                text-decoration: none;
+                transition: transform 0.3s;
+                padding: 15px 10px;
+                border-radius: 12px;
+                background-color: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(5px);
+            }
+
+            .social-icon:hover {
+                transform: translateY(-5px) scale(1.05);
+            }
+
+            .icon-circle {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 10px;
+                transition: transform 0.3s, box-shadow 0.3s;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .social-icon:hover .icon-circle {
+                transform: scale(1.1);
+                box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+            }
+
+            .social-icon i {
+                font-size: 28px;
+            }
+
+            .social-icon span {
+                font-size: 14px;
+                font-weight: 500;
+                margin-top: 5px;
+            }
+
+            /* Social Media Brand Colors */
+            .facebook {
+                background-color: #1877f2;
+            }
+
+            .linkedin {
+                background-color: #0a66c2;
+            }
+
+            .instagram {
+                background: radial-gradient(
+                    circle at 30% 107%,
+                    #fdf497 0%,
+                    #fdf497 5%,
+                    #fd5949 45%,
+                    #d6249f 60%,
+                    #285aeb 90%
+                );
+            }
+
+            .twitter {
+                background-color: #1da1f2;
+            }
+
+            .reddit {
+                background-color: #ff4500;
+            }
+
+            .pinterest {
+                background-color: #e60023;
+            }
+
+            .youtube {
+                background-color: #ff0000;
+            }
+
+            .github {
+                background-color: #161b22;
+            }
+
+            .tech-links {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+                gap: 15px;
+            }
+
+            .tech-link {
+                background-color: rgba(255, 255, 255, 0.15);
+                color: white;
+                text-decoration: none;
+                padding: 14px 15px;
+                border-radius: 12px;
+                transition: all 0.3s;
+                display: flex;
+                align-items: center;
+                backdrop-filter: blur(5px);
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .tech-link i {
+                margin-right: 10px;
+                font-size: 20px;
+                width: 30px;
+                text-align: center;
+            }
+
+            .tech-link:hover {
+                background-color: rgba(255, 255, 255, 0.25);
+                transform: translateY(-3px);
+                box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            /* Tech site colors */
+            .github-color {
+                color: #6e5494;
+            }
+            .stackoverflow-color {
+                color: #f48024;
+            }
+            .medium-color {
+                color: #00ab6c;
+            }
+            .dev-color {
+                color: #3b49df;
+            }
+            .arxiv-color {
+                color: #b31b1b;
+            }
+            .hackernews-color {
+                color: #ff6600;
+            }
+            .nature-color {
+                color: #1a1a1a;
+            }
+            .science-color {
+                color: #0c70b4;
+            }
+
+            .settings {
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+                background-color: rgba(255, 255, 255, 0.2);
+                color: white;
+                border: none;
+                padding: 10px 14px;
+                border-radius: 12px;
+                cursor: pointer;
+                transition: all 0.3s;
+                backdrop-filter: blur(5px);
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .settings:hover {
+                background-color: rgba(255, 255, 255, 0.3);
+                transform: translateY(-2px);
+                box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .image-info {
+                position: absolute;
+                bottom: 20px;
+                left: 20px;
+                font-size: 12px;
+                color: rgba(255, 255, 255, 0.8);
+                padding: 8px 12px;
+                background-color: rgba(0, 0, 0, 0.3);
+                border-radius: 20px;
+                backdrop-filter: blur(5px);
+            }
+
+            .refresh-image {
+                position: absolute;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: linear-gradient(45deg, #2193b0, #6dd5ed);
+                color: white;
+                border: none;
+                padding: 10px 16px;
+                border-radius: 30px;
+                cursor: pointer;
+                transition: all 0.3s;
+                font-weight: 500;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .refresh-image:hover {
+                transform: translateX(-50%) translateY(-2px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            }
+
+            .refresh-image i {
+                margin-right: 8px;
+            }
+
+            @media (max-width: 768px) {
+                .container {
+                    width: 90%;
+                }
+
+                .greeting {
+                    font-size: 2.2rem;
+                }
+
+                .date-time {
+                    font-size: 1.2rem;
+                    margin-bottom: 2rem;
+                }
+
+                .social-grid {
+                    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+                    gap: 15px;
+                }
+
+                .icon-circle {
+                    width: 50px;
+                    height: 50px;
+                }
+
+                .social-icon i {
+                    font-size: 24px;
+                }
+            }
+
+            /* Animation for page load */
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .container > * {
+                animation: fadeInUp 0.6s ease-out forwards;
+            }
+
+            .greeting {
+                animation-delay: 0.1s;
+            }
+
+            .date-time {
+                animation-delay: 0.2s;
+            }
+
+            .search-container {
+                animation-delay: 0.3s;
+            }
+
+            .social-grid {
+                animation-delay: 0.4s;
+            }
+
+            .tech-links {
+                animation-delay: 0.5s;
+            }
+        </style>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="greeting" id="greeting">Good morning</h1>
+            <div class="date-time" id="datetime">Thursday, March 6, 2025</div>
+
+            <form class="search-container" id="search-form">
+                <input
+                    type="text"
+                    class="search-input"
+                    placeholder="Search the web..."
+                    id="search-input"
+                />
+                <button type="submit" class="search-button">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+
+            <div class="social-grid">
+                <a href="https://www.facebook.com" class="social-icon">
+                    <div class="icon-circle facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </div>
+                    <span>Facebook</span>
+                </a>
+                <a href="https://www.linkedin.com" class="social-icon">
+                    <div class="icon-circle linkedin">
+                        <i class="fab fa-linkedin-in"></i>
+                    </div>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="https://www.instagram.com" class="social-icon">
+                    <div class="icon-circle instagram">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                    <span>Instagram</span>
+                </a>
+                <a href="https://www.twitter.com" class="social-icon">
+                    <div class="icon-circle twitter">
+                        <i class="fab fa-twitter"></i>
+                    </div>
+                    <span>Twitter</span>
+                </a>
+                <a href="https://www.reddit.com" class="social-icon">
+                    <div class="icon-circle reddit">
+                        <i class="fab fa-reddit-alien"></i>
+                    </div>
+                    <span>Reddit</span>
+                </a>
+                <a href="https://www.pinterest.com" class="social-icon">
+                    <div class="icon-circle pinterest">
+                        <i class="fab fa-pinterest-p"></i>
+                    </div>
+                    <span>Pinterest</span>
+                </a>
+
+                <a href="https://www.youtube.com" class="social-icon">
+                    <div class="icon-circle youtube">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <span>YouTube</span>
+                </a>
+                <a href="https://github.com" class="social-icon">
+                    <div class="icon-circle github">
+                        <i class="fab fa-github"></i>
+                    </div>
+                    <span>GitHub</span>
+                </a>
+            </div>
+
+            <div class="tech-links">
+                <a href="https://www.github.com" class="tech-link">
+                    <i class="fab fa-github github-color"></i> GitHub
+                </a>
+                <a href="https://stackoverflow.com" class="tech-link">
+                    <i class="fab fa-stack-overflow stackoverflow-color"></i>
+                    Stack Overflow
+                </a>
+                <a href="https://medium.com/topic/technology" class="tech-link">
+                    <i class="fab fa-medium-m medium-color"></i> Medium Tech
+                </a>
+
+                <a href="https://dev.to" class="tech-link">
+                    <i class="fab fa-dev dev-color"></i> DEV Community
+                </a>
+                <a href="https://arxiv.org" class="tech-link">
+                    <i class="fas fa-file-alt arxiv-color"></i> arXiv
+                </a>
+                <a href="https://news.ycombinator.com" class="tech-link">
+                    <i class="fab fa-hacker-news hackernews-color"></i> Hacker
+                    News
+                </a>
+                <a href="https://www.nature.com" class="tech-link">
+                    <i class="fas fa-flask nature-color"></i> Nature
+                </a>
+                <a href="https://www.sciencemag.org" class="tech-link">
+                    <i class="fas fa-atom science-color"></i> Science
+                </a>
+            </div>
+        </div>
+
+        <div class="image-info" id="image-info">Nature image from Unsplash</div>
+        <button class="refresh-image" id="refresh-image">
+            <i class="fas fa-sync-alt"></i> New Background
+        </button>
+        <button class="settings"><i class="fas fa-cog"></i> Settings</button>
+
+        <script>
+            const pt1 = "";
+            const pt4 = "";
+            const pt2 = "";
+            const pt3 = "";
+            // API configuration - Replace YOUR_API_KEY with your actual API key
+            const UNSPLASH_API_KEY = pt1+pt2+pt3+pt4;
+
+            // Update greeting based on time of day
+            function updateGreeting() {
+                const hour = new Date().getHours();
+                const greeting = document.getElementById("greeting");
+
+                if (hour >= 5 && hour < 12) {
+                    greeting.textContent = "Good morning";
+                } else if (hour >= 12 && hour < 18) {
+                    greeting.textContent = "Good afternoon";
+                } else {
+                    greeting.textContent = "Good evening";
+                }
+            }
+
+            // Update date and time
+            function updateDateTime() {
+                const now = new Date();
+                const options = {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                };
+                const dateTimeElement = document.getElementById("datetime");
+                dateTimeElement.textContent = now.toLocaleDateString(
+                    "en-US",
+                    options
+                );
+            }
+
+            // Handle search form submission
+            document
+                .getElementById("search-form")
+                .addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    const searchTerm = document
+                        .getElementById("search-input")
+                        .value.trim();
+
+                    if (searchTerm) {
+                        window.location.href = `https://www.bing.com/search?q=${encodeURIComponent(
+                            searchTerm
+                        )}`;
+                    }
+                });
+
+            // Fetch a random nature image from Unsplash
+            async function fetchRandomNatureImage() {
+                try {
+                    // Using a temporary placeholder while waiting for your API key
+                    // When you add your API key, it will use the real Unsplash API
+                    if (UNSPLASH_API_KEY === "YOUR_API_KEY") {
+                        // Use a placeholder for now
+                        document.body.style.backgroundImage =
+                            "url('/api/placeholder/1920/1080')";
+                        document.getElementById("image-info").textContent =
+                            "Add your Unsplash API key to see real nature images";
+                        return;
+                    }
+
+                    const response = await fetch(
+                        `https://api.unsplash.com/photos/random?query=nature,landscape&orientation=landscape&client_id=${UNSPLASH_API_KEY}`
+                    );
+                    const data = await response.json();
+
+                    if (data && data.urls && data.urls.regular) {
+                        document.body.style.backgroundImage = `url(${data.urls.regular})`;
+
+                        // Update image info
+                        let infoText = "Photo by ";
+                        if (data.user && data.user.name) {
+                            infoText += data.user.name;
+                        } else {
+                            infoText += "Unknown";
+                        }
+                        infoText += " on Unsplash";
+                        document.getElementById("image-info").textContent =
+                            infoText;
+                    }
+                } catch (error) {
+                    console.error("Error fetching image:", error);
+                    // Fallback to placeholder
+                    document.body.style.backgroundImage =
+                        "url('/api/placeholder/1920/1080')";
+                }
+            }
+
+            // Initialize
+            updateGreeting();
+            updateDateTime();
+            fetchRandomNatureImage();
+
+            // Update time every minute
+            setInterval(updateDateTime, 60000);
+
+            // Update greeting every hour
+            setInterval(updateGreeting, 3600000);
+
+            // Add refresh image button functionality
+            document
+                .getElementById("refresh-image")
+                .addEventListener("click", fetchRandomNatureImage);
+        </script>
+    </body>
+</html>

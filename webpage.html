@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Crypto Trading Hub</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            body {
+                background-size: cover;
+                background-position: center;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                color: white;
+                position: relative;
+                overflow: auto;
+                transition: background-image 1s ease;
+                background-color: #0c0e14;
+                padding: 30px 0;
+            }
+
+            body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(12, 14, 20, 0.75);
+                backdrop-filter: blur(3px);
+                z-index: -1;
+            }
+
+            .container {
+                width: 85%;
+                max-width: 1000px;
+                text-align: center;
+                z-index: 1;
+                padding-bottom: 70px; /* Add padding to bottom for better layout */
+            }
+
+            .header-section {
+                margin-bottom: 25px;
+            }
+
+            .greeting {
+                font-size: 2.8rem;
+                margin-top: 5rem;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+                font-weight: 500;
+                letter-spacing: 1px;
+                color: #f0b90b;
+            }
+
+            .date-time {
+                font-size: 1.3rem;
+                margin-bottom: 1.5rem;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+                font-weight: 300;
+                opacity: 0.9;
+                color: #f0b90b;
+            }
+
+            .search-container {
+                display: flex;
+                margin-bottom: 2rem;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                border-radius: 30px;
+                overflow: hidden;
+                transition: transform 0.3s, box-shadow 0.3s;
+                border: 2px solid #f0b90b;
+            }
+
+            .search-container:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(240, 185, 11, 0.4);
+            }
+
+            .search-input {
+                flex: 1;
+                padding: 14px 20px;
+                font-size: 16px;
+                border: none;
+                outline: none;
+                background-color: rgba(25, 27, 32, 0.95);
+                color: white;
+            }
+
+            .search-button {
+                background: #f0b90b;
+                color: #0c0e14;
+                border: none;
+                padding: 14px 28px;
+                cursor: pointer;
+                font-size: 16px;
+                font-weight: 600;
+                transition: background 0.3s;
+            }
+
+            .search-button:hover {
+                background: #e0ac0a;
+            }
+
+            .crypto-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+                gap: 15px;
+                margin-bottom: 2rem;
+            }
+
+            .crypto-icon {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                color: white;
+                text-decoration: none;
+                transition: transform 0.3s;
+                padding: 15px 10px;
+                border-radius: 12px;
+                background-color: rgba(25, 27, 32, 0.6);
+                backdrop-filter: blur(5px);
+                border: 1px solid rgba(240, 185, 11, 0.1);
+            }
+
+            .crypto-icon:hover {
+                transform: translateY(-5px) scale(1.05);
+                border: 1px solid rgba(240, 185, 11, 0.4);
+                background-color: rgba(25, 27, 32, 0.8);
+            }
+
+            .icon-circle {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 10px;
+                transition: transform 0.3s, box-shadow 0.3s;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .crypto-icon:hover .icon-circle {
+                transform: scale(1.1);
+                box-shadow: 0 6px 14px rgba(240, 185, 11, 0.3);
+            }
+
+            .crypto-icon i {
+                font-size: 24px;
+            }
+
+            .crypto-icon span {
+                font-size: 14px;
+                font-weight: 500;
+                margin-top: 5px;
+            }
+
+            /* Brand Colors */
+            .binance {
+                background-color: #f0b90b;
+                color: #0c0e14;
+            }
+
+            .coinbase {
+                background-color: #0052ff;
+            }
+
+            .kucoin {
+                background-color: #0093dd;
+            }
+
+            .kraken {
+                background-color: #5741d9;
+            }
+
+            .gmail {
+                background-color: #ea4335;
+            }
+
+            .gmail-alt {
+                background-color: #34a853;
+            }
+
+            .coinmarketcap {
+                background-color: #17181b;
+                border: 1px solid #3861fb;
+            }
+
+            .tradingview {
+                background-color: #131722;
+                border: 1px solid #2962ff;
+            }
+
+            .resource-links {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+                gap: 15px;
+            }
+
+            .resource-link {
+                background-color: rgba(25, 27, 32, 0.6);
+                color: white;
+                text-decoration: none;
+                padding: 14px 15px;
+                border-radius: 12px;
+                transition: all 0.3s;
+                display: flex;
+                align-items: center;
+                backdrop-filter: blur(5px);
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                border: 1px solid rgba(240, 185, 11, 0.1);
+            }
+
+            .resource-link i {
+                margin-right: 10px;
+                font-size: 20px;
+                width: 30px;
+                text-align: center;
+                color: #f0b90b;
+            }
+
+            .resource-link:hover {
+                background-color: rgba(25, 27, 32, 0.8);
+                transform: translateY(-3px);
+                box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+                border: 1px solid rgba(240, 185, 11, 0.4);
+            }
+
+            .market-ticker {
+                background-color: rgba(25, 27, 32, 0.6);
+                padding: 12px;
+                border-radius: 12px;
+                margin-bottom: 2rem;
+                display: flex;
+                justify-content: space-between;
+                overflow-x: auto;
+                border: 1px solid rgba(240, 185, 11, 0.1);
+                backdrop-filter: blur(5px);
+            }
+
+            .ticker-item {
+                padding: 0 15px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-width: 120px;
+            }
+
+            .ticker-name {
+                font-weight: 600;
+                margin-bottom: 5px;
+                color: #f0b90b;
+            }
+
+            .ticker-price {
+                font-size: 16px;
+            }
+
+            .ticker-change {
+                font-size: 14px;
+                padding: 2px 6px;
+                border-radius: 4px;
+                margin-top: 2px;
+            }
+
+            .positive {
+                color: #0ecb81;
+            }
+
+            .negative {
+                color: #f6465d;
+            }
+
+            /* New fixed action buttons container */
+            .action-buttons {
+                position: fixed;
+                bottom: 20px;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+                z-index: 10;
+            }
+
+            .action-btn {
+                background: linear-gradient(45deg, #f0b90b, #ffd700);
+                color: #0c0e14;
+                border: none;
+                padding: 10px 16px;
+                border-radius: 30px;
+                cursor: pointer;
+                transition: all 0.3s;
+                font-weight: 600;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .action-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            }
+
+            .action-btn i {
+                margin-right: 8px;
+            }
+
+            /* Side buttons */
+            .side-buttons {
+                position: fixed;
+                top: 50%;
+                transform: translateY(-50%);
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                z-index: 10;
+            }
+
+            .side-buttons.left {
+                left: 20px;
+            }
+
+            .side-buttons.right {
+                right: 20px;
+            }
+
+            .side-btn {
+                background-color: rgba(240, 185, 11, 0.1);
+                color: #f0b90b;
+                border: 1px solid rgba(240, 185, 11, 0.3);
+                padding: 12px;
+                border-radius: 12px;
+                cursor: pointer;
+                transition: all 0.3s;
+                backdrop-filter: blur(5px);
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                text-align: center;
+            }
+
+            .side-btn:hover {
+                background-color: rgba(240, 185, 11, 0.2);
+                transform: translateY(-2px);
+                box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .side-btn i {
+                font-size: 18px;
+            }
+
+            .image-info {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                font-size: 12px;
+                color: rgba(255, 255, 255, 0.8);
+                padding: 8px 12px;
+                background-color: rgba(25, 27, 32, 0.6);
+                border-radius: 20px;
+                backdrop-filter: blur(5px);
+                border: 1px solid rgba(240, 185, 11, 0.1);
+                z-index: 5;
+            }
+
+            @media (max-width: 768px) {
+                .container {
+                    width: 90%;
+                    padding-bottom: 90px;
+                }
+
+                .greeting {
+                    font-size: 2rem;
+                }
+
+                .date-time {
+                    font-size: 1.1rem;
+                    margin-bottom: 1.5rem;
+                }
+
+                .crypto-grid {
+                    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+                    gap: 12px;
+                }
+
+                .icon-circle {
+                    width: 45px;
+                    height: 45px;
+                }
+
+                .crypto-icon i {
+                    font-size: 22px;
+                }
+
+                .side-buttons {
+                    display: none; /* Hide side buttons on mobile */
+                }
+
+                .action-buttons {
+                    width: 100%;
+                    padding: 0 10px;
+                }
+
+                .action-btn {
+                    padding: 8px 12px;
+                    font-size: 14px;
+                }
+
+                .image-info {
+                    bottom: 70px;
+                    right: 10px;
+                    font-size: 10px;
+                    padding: 6px 10px;
+                }
+            }
+
+            /* Animation for page load */
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .container > * {
+                animation: fadeInUp 0.6s ease-out forwards;
+            }
+
+            .greeting {
+                animation-delay: 0.1s;
+            }
+
+            .date-time {
+                animation-delay: 0.2s;
+            }
+
+            .search-container {
+                animation-delay: 0.3s;
+            }
+
+            .market-ticker {
+                animation-delay: 0.4s;
+            }
+
+            .crypto-grid {
+                animation-delay: 0.5s;
+            }
+
+            .resource-links {
+                animation-delay: 0.6s;
+            }
+            /* Your existing styles here */
+        </style>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+    </head>
+    <body>
+        <div class="container">
+            <div class="header-section">
+                <h1 class="greeting" id="greeting">Good morning, Trader</h1>
+                <div class="date-time" id="datetime">
+                    Thursday, March 6, 2025
+                </div>
+            </div>
+
+            <form class="search-container" id="search-form">
+                <input
+                    type="text"
+                    class="search-input"
+                    placeholder="Search the web or crypto markets..."
+                    id="search-input"
+                />
+                <button type="submit" class="search-button">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+            <div class="market-ticker" id="market-ticker">
+                <div class="ticker-item">
+                    <div class="ticker-name">BTC/USDT</div>
+                    <span id="btc-price">$0.00</span>
+                    <div id="btc-change" class="ticker-change">+0.00%</div>
+                </div>
+                <div class="ticker-item">
+                    <div class="ticker-name">ETH/USDT</div>
+                    <span id="eth-price">$0.00</span>
+                    <div id="eth-change" class="ticker-change">+0.00%</div>
+                </div>
+                <div class="ticker-item">
+                    <div class="ticker-name">BNB/USDT</div>
+                    <span id="bnb-price">$0.00</span>
+                    <div id="bnb-change" class="ticker-change">+0.00%</div>
+                </div>
+                <div class="ticker-item">
+                    <div class="ticker-name">SOL/USDT</div>
+                    <span id="sol-price">$0.00</span>
+                    <div id="sol-change" class="ticker-change">+0.00%</div>
+                </div>
+                <div class="ticker-item">
+                    <div class="ticker-name">XRP/USDT</div>
+                    <span id="xrp-price">$0.00</span>
+                    <div id="xrp-change" class="ticker-change">+0.00%</div>
+                </div>
+            </div>
+
+            <div class="crypto-grid">
+                <a href="https://www.binance.com" class="crypto-icon">
+                    <div class="icon-circle binance">
+                        <i class="fab fa-bitcoin"></i>
+                    </div>
+                    <span>Binance</span>
+                </a>
+                <a href="https://www.coinbase.com" class="crypto-icon">
+                    <div class="icon-circle coinbase">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <span>Coinbase</span>
+                </a>
+                <a href="https://www.kucoin.com" class="crypto-icon">
+                    <div class="icon-circle kucoin">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <span>KuCoin</span>
+                </a>
+                <a href="https://www.kraken.com" class="crypto-icon">
+                    <div class="icon-circle kraken">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <span>Kraken</span>
+                </a>
+                <a href="https://mail.google.com" class="crypto-icon">
+                    <div class="icon-circle gmail">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <span>Gmail</span>
+                </a>
+                <a href="https://mail.google.com" class="crypto-icon">
+                    <div class="icon-circle gmail-alt">
+                        <i class="fas fa-envelope-open"></i>
+                    </div>
+                    <span>Gmail Alt</span>
+                </a>
+                <a href="https://coinmarketcap.com" class="crypto-icon">
+                    <div class="icon-circle coinmarketcap">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <span>CoinMarketCap</span>
+                </a>
+                <a href="https://www.tradingview.com" class="crypto-icon">
+                    <div class="icon-circle tradingview">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <span>TradingView</span>
+                </a>
+            </div>
+
+            <div class="resource-links">
+                <a href="https://www.coingecko.com" class="resource-link">
+                    <i class="fas fa-globe"></i> CoinGecko
+                </a>
+                <a href="https://www.cryptopanic.com" class="resource-link">
+                    <i class="fas fa-newspaper"></i> CryptoPanic
+                </a>
+                <a href="https://decrypt.co" class="resource-link">
+                    <i class="fas fa-rss"></i> Decrypt News
+                </a>
+                <a href="https://www.bybit.com" class="resource-link">
+                    <i class="fas fa-chart-area"></i> Bybit
+                </a>
+                <a href="https://ftx.com" class="resource-link">
+                    <i class="fas fa-exchange-alt"></i> FTX
+                </a>
+                <a href="https://pro.coinbase.com" class="resource-link">
+                    <i class="fas fa-chart-line"></i> Coinbase Pro
+                </a>
+                <a href="https://www.bitfinex.com" class="resource-link">
+                    <i class="fas fa-landmark"></i> Bitfinex
+                </a>
+                <a href="https://www.okx.com" class="resource-link">
+                    <i class="fas fa-coins"></i> OKX
+                </a>
+            </div>
+        </div>
+
+        <!-- Side Buttons (Left) -->
+        <div class="side-buttons left">
+            <button class="side-btn" id="favorite-btn" title="Favorites">
+                <i class="fas fa-star"></i>
+            </button>
+            <button class="side-btn" id="alert-btn" title="Price Alerts">
+                <i class="fas fa-bell"></i>
+            </button>
+            <button class="side-btn" id="news-btn" title="Latest News">
+                <i class="fas fa-newspaper"></i>
+            </button>
+        </div>
+
+        <!-- Side Buttons (Right) -->
+        <div class="side-buttons right">
+            <button class="side-btn" id="theme-btn" title="Change Theme">
+                <i class="fas fa-palette"></i>
+            </button>
+            <button class="side-btn" id="settings-btn" title="Settings">
+                <i class="fas fa-cog"></i>
+            </button>
+            <button class="side-btn" id="help-btn" title="Help">
+                <i class="fas fa-question-circle"></i>
+            </button>
+        </div>
+
+        <!-- Fixed Bottom Action Buttons -->
+        <div class="action-buttons">
+            <button class="action-btn" id="portfolio-btn">
+                <i class="fas fa-chart-pie"></i> Portfolio
+            </button>
+            <button class="action-btn" id="refresh-image">
+                <i class="fas fa-sync-alt"></i> New Background
+            </button>
+            <button class="action-btn" id="trade-btn">
+                <i class="fas fa-exchange-alt"></i> Quick Trade
+            </button>
+        </div>
+
+        <div class="image-info" id="image-info">Crypto trading background</div>
+
+        <script>
+            const pt1 = "";
+            const pt4 = "";
+            const pt2 = "";
+            const pt3 = "";
+            // API configuration - Replace YOUR_API_KEY with your actual API key
+            const UNSPLASH_API_KEY = pt1 + pt2 + pt3 + pt4;
+
+            // Update greeting based on time of day
+            function updateGreeting() {
+                const hour = new Date().getHours();
+                const greeting = document.getElementById("greeting");
+
+                if (hour >= 5 && hour < 12) {
+                    greeting.textContent = "Good morning, Trader";
+                } else if (hour >= 12 && hour < 18) {
+                    greeting.textContent = "Good afternoon, Trader";
+                } else {
+                    greeting.textContent = "Good evening, Trader";
+                }
+            }
+
+            // Update date and time
+            function updateDateTime() {
+                const now = new Date();
+                const options = {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                };
+                const dateTimeElement = document.getElementById("datetime");
+                dateTimeElement.textContent = now.toLocaleDateString(
+                    "en-US",
+                    options
+                );
+            }
+
+            // Handle search form submission
+            document
+                .getElementById("search-form")
+                .addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    const searchTerm = document
+                        .getElementById("search-input")
+                        .value.trim();
+
+                    if (searchTerm) {
+                        window.location.href = `https://www.google.com/search?q=${encodeURIComponent(
+                            searchTerm
+                        )}`;
+                    }
+                });
+
+            // Fetch a cryptocurrency-related image from Unsplash
+            async function fetchCryptoImage() {
+                try {
+                    // Using a placeholder until API key is added
+                    if (UNSPLASH_API_KEY === "YOUR_API_KEY") {
+                        // Random crypto-related backgrounds
+                        const cryptoBackgrounds = [
+                            "url('https://images.unsplash.com/photo-1605792657660-596af9009e82?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2002&q=80')",
+                            "url('https://images.unsplash.com/photo-1518546305927-5a555bb7020d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80')",
+                            "url('https://images.unsplash.com/photo-1639322537228-f710d846310a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1332&q=80')",
+                        ];
+
+                        // Pick a random background
+                        const randomBg =
+                            cryptoBackgrounds[
+                                Math.floor(
+                                    Math.random() * cryptoBackgrounds.length
+                                )
+                            ];
+                        document.body.style.backgroundImage = randomBg;
+                        document.getElementById("image-info").textContent =
+                            "Crypto trading background (add your API key for more images)";
+                        return;
+                    }
+
+                    const response = await fetch(
+                        `https://api.unsplash.com/photos/random?query=cryptocurrency&orientation=landscape&client_id=${UNSPLASH_API_KEY}`
+                    );
+                    const data = await response.json();
+
+                    if (data && data.urls && data.urls.regular) {
+                        document.body.style.backgroundImage = `url(${data.urls.regular})`;
+
+                        // Update image info
+                        let infoText = "Photo by ";
+                        if (data.user && data.user.name) {
+                            infoText += data.user.name;
+                        } else {
+                            infoText += "Unknown";
+                        }
+                        infoText += " on Unsplash";
+                        document.getElementById("image-info").textContent =
+                            infoText;
+                    }
+                } catch (error) {
+                    console.error("Error fetching image:", error);
+                    // Fallback to a cryptocurrency-related color/gradient
+                    document.body.style.backgroundImage =
+                        "linear-gradient(45deg, #0c0e14, #1a1d24)";
+                    document.getElementById("image-info").textContent =
+                        "Crypto trading theme";
+                }
+            }
+
+            // Simulate cryptocurrency prices update
+            function updateCryptoPrices() {
+                const tickers = document.querySelectorAll(".ticker-item");
+
+                tickers.forEach((ticker) => {
+                    // Get current price
+                    const priceElement = ticker.querySelector(".ticker-price");
+                    let currentPrice = parseFloat(
+                        priceElement.textContent
+                            .replace("$", "")
+                            .replace(",", "")
+                    );
+
+                    // Calculate random change (-2% to +2%)
+                    const changePercent = (Math.random() * 4 - 2) / 100;
+                    const newPrice = currentPrice * (1 + changePercent);
+
+                    // Format price based on value
+                    let formattedPrice;
+                    if (newPrice < 1) {
+                        formattedPrice = "$" + newPrice.toFixed(4);
+                    } else if (newPrice < 100) {
+                        formattedPrice = "$" + newPrice.toFixed(2);
+                    } else {
+                        formattedPrice =
+                            "$" +
+                            newPrice
+                                .toFixed(2)
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    }
+
+                    // Update price display
+                    priceElement.textContent = formattedPrice;
+
+                    // Update change percentage
+                    const changeElement =
+                        ticker.querySelector(".ticker-change");
+                    const currentChange = parseFloat(
+                        changeElement.textContent
+                            .replace("%", "")
+                            .replace("+", "")
+                    );
+                    const newChange = currentChange + changePercent * 100;
+
+                    changeElement.textContent =
+                        (newChange >= 0 ? "+" : "") +
+                        newChange.toFixed(2) +
+                        "%";
+
+                    // Update color
+                    if (newChange >= 0) {
+                        changeElement.className = "ticker-change positive";
+                    } else {
+                        changeElement.className = "ticker-change negative";
+                    }
+                });
+            }
+
+            // Initialize
+            updateGreeting();
+            updateDateTime();
+            fetchCryptoImage();
+
+            // Update time every minute
+            setInterval(updateDateTime, 60000);
+
+            // Update greeting every hour
+            setInterval(updateGreeting, 3600000);
+
+            // Update crypto prices periodically
+            setInterval(updateCryptoPrices, 30000);
+
+            // Add refresh image button functionality
+            document
+                .getElementById("refresh-image")
+                .addEventListener("click", fetchCryptoImage);
+            async function fetchCryptoPrices() {
+                try {
+                    const coins = {
+                        bitcoin: "btc",
+                        ethereum: "eth",
+                        binancecoin: "bnb",
+                        solana: "sol",
+                        ripple: "xrp",
+                    };
+
+                    const response = await fetch(
+                        "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,binancecoin,solana,ripple&vs_currencies=usd&include_24hr_change=true"
+                    );
+                    const data = await response.json();
+
+                    for (const [coin, id] of Object.entries(coins)) {
+                        if (data[coin]) {
+                            const priceElement = document.getElementById(
+                                `${id}-price`
+                            );
+                            const changeElement = document.getElementById(
+                                `${id}-change`
+                            );
+
+                            const price = data[coin].usd.toFixed(2);
+                            const change = data[coin].usd_24h_change.toFixed(2);
+
+                            priceElement.textContent = `$${price}`;
+                            changeElement.textContent = `${change}%`;
+
+                            // Apply colors based on percentage change
+                            if (parseFloat(change) >= 0) {
+                                changeElement.style.color = "#0ECB81"; // Green
+                            } else {
+                                changeElement.style.color = "#F6465D"; // Red
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error fetching crypto prices:", error);
+                }
+            }
+
+            // Fetch prices on page load
+            fetchCryptoPrices();
+
+            // Refresh prices every 30 seconds
+            setInterval(fetchCryptoPrices, 30000);
+        </script>
+    </body>
+</html>
